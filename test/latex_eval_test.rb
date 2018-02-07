@@ -185,6 +185,11 @@ class TestEval < Minitest::Test
     assert_equal LatexEval::ParseLatex.new(latex).parse, 'xi*2' 
   end
 
+  def test_that_latex_parser_adds_missing_multiplication_between_variable
+    latex = '\alpha\beta'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'alpha*beta' 
+  end
+
   def test_that_latex_parser_adds_missing_multiplication_between_brackets
     latex = '(1)(2)'
     assert_equal LatexEval::ParseLatex.new(latex).parse, '(1)*(2)' 
