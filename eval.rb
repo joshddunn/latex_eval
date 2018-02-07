@@ -1,5 +1,5 @@
 module LatexEval
-  class EvalPRN
+  class PostfixNotation
     attr_reader :notation, :operations
 
     def initialize(notation)
@@ -38,7 +38,7 @@ end
 
 notation = [:x, 7, 1, 1, :add, :subtract, :divide, 3, :multiply, 2, 1, 1, :add, :add, :subtract]
 
-stored = LatexEval::EvalPRN.new(notation)
+stored = LatexEval::PostfixNotation.new(notation)
 
 puts stored.eval({x: 15})
 puts stored.eval({x: 16})
