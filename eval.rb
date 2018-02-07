@@ -5,11 +5,11 @@ module LatexEval
     def initialize(notation)
       @notation = notation
       @operations = {
-        add: lambda { |a, b| a + b },
-        subtract: lambda { |a, b| a - b },
-        multiply: lambda { |a, b| a * b },
-        divide: lambda { |a, b| a / b },
-        power: lambda { |a, b| a ** b },
+        add: ->(a,b) { a + b },
+        subtract: ->(a,b) { a - b },
+        multiply: ->(a,b) { a * b },
+        divide: ->(a,b) { a / b },
+        power: ->(a,b) { a ** b },
       }
     end
 
