@@ -8,23 +8,28 @@ module LatexEval
       @key = {
         "+" => {
           symbol: :add,
-          priority: 0
+          priority: 0,
+          right_priority: false
         },
         "-" => {
           symbol: :subtract,
-          priority: 0
+          priority: 0,
+          right_priority: false
         },
         "*" => {
           symbol: :multiply,
-          priority: 1
+          priority: 1,
+          right_priority: false
         },
         "/" => {
           symbol: :divide,
-          priority: 1
+          priority: 1,
+          right_priority: false
         },
         "^" => {
           symbol: :power,
-          priority: 2
+          priority: 2,
+          right_priority: true
         },
         "(" => {
           symbol: :left_bracket,
@@ -47,7 +52,7 @@ module LatexEval
           if key.has_key? value
             num_popped = 0
             bank.reverse_each do |b|
-              if b != "(" and key[b][:priority] > key[value][:priority]
+              if b != "(" and (key[b][:right_priority] ? key[b][:priority] > key[value][:priority] : key[b][:priority] >= key[value][:priority])
                 num_popped += 1
                 out.push key[b][:symbol]
               else
