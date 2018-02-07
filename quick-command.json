@@ -2,7 +2,7 @@
   "editor": "mvim",
   "command": {
     "ruby": "docker-compose run cmd ruby",
-    "test": "docker-compose run cmd ruby ./test/test.rb",
+    "test": "docker-compose run cmd ruby ./test/latex_eval_test.rb",
     "t": "qc test"
   }
 }

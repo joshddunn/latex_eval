@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative './../src/latex_eval.rb'
+require_relative './../lib/latex_eval.rb'
 
 class TestEval < Minitest::Test
   def test_that_minitest_works
