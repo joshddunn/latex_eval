@@ -36,4 +36,29 @@ class TestEval < Minitest::Test
     equation = "alpha * beta * gamma"
     assert_equal LatexEval::ParseEquation.new(equation).parse, [:alpha, :beta, :gamma, :multiply, :multiply]
   end
+
+  def test_that_parser_parses_addition
+    equation = "1 + 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, :add]
+  end
+
+  def test_that_parser_parses_subtraction
+    equation = "1 - 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, :subtract]
+  end
+
+  def test_that_parser_parses_multiplication
+    equation = "1 * 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, :multiply]
+  end
+
+  def test_that_parser_parses_division
+    equation = "1 / 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, :divide]
+  end
+
+  def test_that_parser_parses_powers
+    equation = "1 ^ 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, :power]
+  end
 end

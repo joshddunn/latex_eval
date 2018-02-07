@@ -42,7 +42,7 @@ module LatexEval
       bank = []
 
       # major refactoring required
-      equation.gsub(" ", "").split(/([\)\(\^*+-])/).each do |value|
+      equation.gsub(" ", "").split(/([\)\(\^*+-\/])/).each do |value|
         if value != "" 
           if key.has_key? value
             num_popped = 0
