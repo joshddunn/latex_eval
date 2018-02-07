@@ -207,10 +207,6 @@ class TestEval < Minitest::Test
 
   def test_it_all
     latex = '\frac{1}{2}\cdot3\xi+4' 
-    parsed_latex = LatexEval::ParseLatex.new(latex).parse
-    parsed_notation = LatexEval::ParseEquation.new(parsed_latex).parse
-    eval_latex = LatexEval::PostfixNotation.new(parsed_notation)
-
-    assert_equal eval_latex.eval({xi: 2}), 7
+    assert_equal LatexEval.parse_latex(latex, {xi: 2}), 7
   end
 end
