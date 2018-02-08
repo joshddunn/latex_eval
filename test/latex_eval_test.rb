@@ -33,6 +33,51 @@ class TestEval < Minitest::Test
     assert_equal LatexEval::PostfixNotation.new(parsed).eval({x: 13, y: 3}), 2197
   end
 
+  def test_that_negatives_work
+    parsed = [-2, -1, :subtract]
+    assert_equal LatexEval::PostfixNotation.new(parsed).eval, -1
+  end
+
+  def test_that_uniary_negative_works
+    parsed = [-2, -1, :negative, :add]
+    assert_equal LatexEval::PostfixNotation.new(parsed).eval, -1
+  end
+
+  def test_that_uniary_positive_works
+    parsed = [-2, -1, :positive, :add]
+    assert_equal LatexEval::PostfixNotation.new(parsed).eval, -3
+  end
+
+  def test_that_uniary_abs_works
+    parsed = [-2, -1, :abs, :add]
+    assert_equal LatexEval::PostfixNotation.new(parsed).eval, -1
+  end
+
+  # def test_that_uniary_floor_works
+  #   parsed = [-2, -1.123, :floor, :add]
+  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, -4
+  # end
+
+  # def test_that_uniary_ceil_works
+  #   parsed = [-2, -1.123, :ceil, :add]
+  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, -3
+  # end
+
+  # def test_that_uniary_ceil_works_after_divide
+  #   parsed = [-1, -3.123, :ceil, :divide]
+  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, 1.0/3.0
+  # end
+
+  # def test_that_uniary_floor_works_after_divide
+  #   parsed = [-1, -2.123, :floor, :divide]
+  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, 1.0/3.0
+  # end
+
+  def test_that_modulus_works
+    parsed = [432, 123, :mod]
+    assert_equal LatexEval::PostfixNotation.new(parsed).eval, 63 
+  end
+
   # ParseEquation
   def test_that_parser_parses_addition
     equation = "1 + 2"
@@ -72,6 +117,11 @@ class TestEval < Minitest::Test
   def test_that_parser_respects_separate_brackets
     equation = "(1+(2-4))^(3 * 2)"
     assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, 4, :subtract, :add, 3, 2, :multiply, :power]
+  end
+
+  def test_that_parser_respects_separate_brackets_v2
+    equation = "(1-(2-4))^(3 * 2)"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, 4, :subtract, :subtract, 3, 2, :multiply, :power]
   end
 
   def test_that_parser_disregards_spaces
@@ -142,6 +192,91 @@ class TestEval < Minitest::Test
   def test_that_parser_power_priority_over_division
     equation = "1 / 2 ^ 3"
     assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, 3, :power, :divide]
+  end
+
+  def test_that_parser_mod_priority_over_addition
+    equation = "1 + 2 % 3"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, 3, :mod, :add]
+  end
+
+  def test_that_parser_mod_priority_over_subtraction
+    equation = "1 - 2 % 3"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [1, 2, 3, :mod, :subtract]
+  end
+
+  def test_that_negative_works
+    equation = "- 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative]
+  end
+
+  def test_that_positive_works
+    equation = "+ 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :positive]
+  end
+
+  def test_that_negative_works_inside_brackets
+    equation = "(-2)"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative]
+  end
+
+  def test_that_negative_works_outside_brackets
+    equation = "(-2)"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative]
+  end
+
+  def test_that_negative_works_with_others
+    equation = "-2+3"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative, 3, :add]
+  end
+
+  def test_that_negative_works_with_multiple_negatives
+    equation = "--2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative, :negative]
+  end
+
+  # def test_that_negative_works_with_floor
+  #   equation = "floor(2)"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :floor]
+  # end
+
+  # def test_that_negative_works_with_floor_together
+  #   equation = "floor(2) + 3"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :floor, 3, :add]
+  # end
+
+  # def test_that_negative_works_with_floor_inside
+  #   equation = "floor(2 + 3)"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 3, :add, :floor]
+  # end
+
+  # def test_that_negative_works_with_ceil
+  #   equation = "ceil(2)"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :ceil]
+  # end
+
+  # def test_that_negative_works_with_nested_uinary
+  #   equation = "floor(ceil(2))"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :ceil, :floor]
+  # end
+
+  # def test_that_negative_works_with_multiplication
+  #   equation = "2 * floor(ceil(2))"
+  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :ceil, :floor, :multiply]
+  # end
+
+  def test_that_negative_works_with_multiplication_normal
+    equation = "2 * - 2"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :negative, :multiply]
+  end
+
+  def test_that_negative_works_with_multiple_negatives
+    equation = "2^(-2)"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :negative, :power]
+  end
+
+  def test_that_negative_works_with_multiple_negatives
+    equation = "2^(-2)"
+    assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :negative, :power]
   end
 
   # parse latex

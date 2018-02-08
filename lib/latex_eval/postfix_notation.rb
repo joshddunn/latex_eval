@@ -5,11 +5,50 @@ module LatexEval
     def initialize(notation)
       @notation = notation
       @operations = {
-        add: ->(a,b) { a + b },
-        subtract: ->(a,b) { a - b },
-        multiply: ->(a,b) { a * b },
-        divide: ->(a,b) { a / b },
-        power: ->(a,b) { a ** b },
+        add: {
+          args: 2,
+          operation: ->(a,b) { a + b },
+        }, 
+        subtract: {
+          args: 2,
+          operation: ->(a,b) { a - b },
+        },
+        multiply: {
+          args: 2,
+          operation: ->(a,b) { a * b },
+        },
+        divide: {
+          args: 2, 
+          operation: ->(a,b) { a / b },
+        },
+        power: {
+          args: 2,
+          operation: ->(a,b) { a ** b },
+        },
+        mod: {
+          args: 2,
+          operation: ->(a,b) { a % b },
+        },
+        negative: {
+          args: 1,
+          operation: ->(a) { -a },
+        },
+        positive: {
+          args: 1,
+          operation: ->(a) { +a },
+        },
+        abs: {
+          args: 1,
+          operation: ->(a) { a.abs },
+        },
+        floor: {
+          args: 1,
+          operation: ->(a) { a.floor },
+        },
+        ceil: {
+          args: 1,
+          operation: ->(a) { a.ceil },
+        },
       }
     end
 
@@ -19,10 +58,7 @@ module LatexEval
       notation.each do |elem|
         if elem.is_a? Symbol
           if operations.has_key? elem
-            b = stack.pop()
-            a = stack.pop()
-
-            stack.push operations[elem].call(a, b)
+            stack.push operations[elem][:operation].call(*stack.pop(operations[elem][:args])).to_f
           else
             stack.push subs[elem].to_f
           end

@@ -1,11 +1,11 @@
 module LatexEval
   class ParseEquation
 
-    attr_reader :key, :equation
+    attr_reader :binary_key, :equation, :uinary_key
 
     def initialize(equation)
       @equation = equation
-      @key = {
+      @binary_key = {
         "+" => {
           symbol: :add,
           priority: 0,
@@ -26,69 +26,94 @@ module LatexEval
           priority: 1,
           right_priority: false
         },
+        "%" => {
+          symbol: :mod,
+          priority: 1,
+          right_priority: false
+        },
         "^" => {
           symbol: :power,
           priority: 2,
           right_priority: true
-        },
-        "(" => {
-          symbol: :left_bracket,
-          priority: 3
-        },
-        ")" => {
-          symbol: :right_bracket,
-          priority: 3
         }
+      }
+      @uinary_key = {
+        "-" => {
+          symbol: :negative,
+        },
+        "+" => {
+          symbol: :positive,
+        },
+        # "floor" => {
+        #   symbol: :floor,
+        # },
+        # "ceil" => {
+        #   symbol: :ceil,
+        # },
       }
     end
 
     def parse
       out = []
       bank = []
+      bracket = []
+      uinary = []
 
-      # major refactoring required
-      equation.gsub(" ", "").split(/([\)\(\^*+-\/])/).each do |value|
+      # start with an assumed array
+      bank.push []
+      bracket.push []
+      uinary.push []
+
+      equation.gsub(" ", "").split(/([%\)\(\^*+-\/])/).each do |value|
         if value != "" 
-          if key.has_key? value
+          if value == "("
+            bank.push []
+            bracket.push []
+            uinary.push []
+          elsif value == ")"
+            last = bracket.pop()
+            bracket.last.concat last
+            bracket.last.concat bank.pop().reverse.map { |e| binary_key[e][:symbol] } 
+            bracket.last.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
+          elsif uinary_key.has_key? value and (bracket.last.empty? || bracket.last.length == bank.last.length)
+            uinary.last.push value 
+          elsif binary_key.has_key? value
             num_popped = 0
-            bank.reverse_each do |b|
-              if b != "(" and (key[b][:right_priority] ? key[b][:priority] > key[value][:priority] : key[b][:priority] >= key[value][:priority])
+            bank.last.reverse_each do |b|
+              if (binary_key[b][:right_priority] ? binary_key[b][:priority] > binary_key[value][:priority] : binary_key[b][:priority] >= binary_key[value][:priority])
                 num_popped += 1
-                out.push key[b][:symbol]
               else
                 break
               end
             end
-            bank.pop(num_popped)
-
-            if value == ")"
-              num_popped = 0
-              bank.reverse_each do |b|
-                num_popped += 1
-                if b == "("
-                  break
-                else
-                  out.push key[b][:symbol]
-                end
-              end
-
-              bank.pop(num_popped)
-            else
-              bank.push value
-            end
+            bracket.last.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
+            uinary.push []
+            bracket.last.concat bank.last.pop(num_popped).reverse.map { |e| binary_key[e][:symbol] }
+            bank.last.push value
           else
             if /[a-zA-Z]+/.match(value)
-              out.push value.to_sym
+              bracket.last.push value.to_sym
             else
-              out.push value.to_f
+              bracket.last.push value.to_f
             end
           end
         end
+        # puts value
+        # print "bank "
+        # print bank
+        # print "\n"
+        # print "bracket "
+        # print bracket
+        # print "\n"
+        # print "uinary "
+        # print uinary
+        # print "\n"
+        # print "\n\n"
       end
 
-      bank.reverse_each do |b|
-        out.push key[b][:symbol] unless b == "(" or b == ")" 
-      end
+      out.concat bracket.pop()
+      out.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
+      out.concat bank.pop().reverse.map { |e| binary_key[e][:symbol] }
 
       return out
     end
