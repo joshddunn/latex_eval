@@ -1,7 +1,7 @@
 module LatexEval
   class ParseEquation
 
-    attr_reader :binary_key, :equation, :uinary_key
+    attr_reader :binary_key, :equation, :unary_key
 
     def initialize(equation)
       @equation = equation
@@ -37,7 +37,7 @@ module LatexEval
           right_priority: true
         }
       }
-      @uinary_key = {
+      @unary_key = {
         "-" => {
           symbol: :negative,
         },
@@ -57,26 +57,26 @@ module LatexEval
       out = []
       bank = []
       bracket = []
-      uinary = []
+      unary = []
 
       # start with an assumed array
       bank.push []
       bracket.push []
-      uinary.push []
+      unary.push []
 
       equation.gsub(" ", "").split(/([%\)\(\^*+-\/])/).each do |value|
         if value != "" 
           if value == "("
             bank.push []
             bracket.push []
-            uinary.push []
+            unary.push []
           elsif value == ")"
             last = bracket.pop()
             bracket.last.concat last
             bracket.last.concat bank.pop().reverse.map { |e| binary_key[e][:symbol] } 
-            bracket.last.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
-          elsif uinary_key.has_key? value and (bracket.last.empty? || bracket.last.length == bank.last.length)
-            uinary.last.push value 
+            bracket.last.concat unary.pop().reverse.map { |e| unary_key[e][:symbol] }
+          elsif unary_key.has_key? value and (bracket.last.empty? || bracket.last.length == bank.last.length)
+            unary.last.push value 
           elsif binary_key.has_key? value
             num_popped = 0
             bank.last.reverse_each do |b|
@@ -86,8 +86,8 @@ module LatexEval
                 break
               end
             end
-            bracket.last.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
-            uinary.push []
+            bracket.last.concat unary.pop().reverse.map { |e| unary_key[e][:symbol] }
+            unary.push []
             bracket.last.concat bank.last.pop(num_popped).reverse.map { |e| binary_key[e][:symbol] }
             bank.last.push value
           else
@@ -105,14 +105,14 @@ module LatexEval
         # print "bracket "
         # print bracket
         # print "\n"
-        # print "uinary "
-        # print uinary
+        # print "unary "
+        # print unary
         # print "\n"
         # print "\n\n"
       end
 
       out.concat bracket.pop()
-      out.concat uinary.pop().reverse.map { |e| uinary_key[e][:symbol] }
+      out.concat unary.pop().reverse.map { |e| unary_key[e][:symbol] }
       out.concat bank.pop().reverse.map { |e| binary_key[e][:symbol] }
 
       return out
