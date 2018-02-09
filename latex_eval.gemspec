@@ -11,4 +11,5 @@ gemspec = Gem::Specification.new do |s|
   s.metadata    = { "source_code_uri" => "https://github.com/joshddunn/latex-eval" }
 
   s.add_development_dependency "minitest", "~> 5.11", ">= 5.11.3"
+  s.add_development_dependency "rake", "~> 12.3"
 end

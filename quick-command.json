@@ -3,6 +3,7 @@
   "command": {
     "ruby": "docker-compose run cmd ruby",
     "test": "docker-compose run cmd ruby ./test/latex_eval_test.rb",
-    "t": "qc test"
+    "build": "docker-compose build",
+    "t": "docker-compose run cmd rake test"
   }
 }

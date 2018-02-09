@@ -1,0 +1,21 @@
+PATH
+  remote: .
+  specs:
+    latex-eval (0.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.11.3)
+    rake (12.3.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  latex-eval!
+  minitest (~> 5.11, >= 5.11.3)
+  rake (~> 12.3)
+
+BUNDLED WITH
+   1.16.0
