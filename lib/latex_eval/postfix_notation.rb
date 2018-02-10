@@ -37,18 +37,6 @@ module LatexEval
           args: 1,
           operation: ->(a) { +a },
         },
-        abs: {
-          args: 1,
-          operation: ->(a) { a.abs },
-        },
-        floor: {
-          args: 1,
-          operation: ->(a) { a.floor },
-        },
-        ceil: {
-          args: 1,
-          operation: ->(a) { a.ceil },
-        },
       }
     end
 

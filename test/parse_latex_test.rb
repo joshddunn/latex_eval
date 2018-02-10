@@ -86,4 +86,14 @@ class TestParseLatex < Minitest::Test
     latex = '\left(x + 2\right)'
     assert_equal LatexEval::ParseLatex.new(latex).parse, '(x+2)' 
   end
+
+  def test_works_with_abs
+    latex = '2 % 3'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '2%3' 
+  end
+
+  def test_works_with_abs_and_variables
+    latex = 'x % y'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'x%y' 
+  end
 end

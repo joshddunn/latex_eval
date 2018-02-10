@@ -44,12 +44,6 @@ module LatexEval
         "+" => {
           symbol: :positive,
         },
-        # "floor" => {
-        #   symbol: :floor,
-        # },
-        # "ceil" => {
-        #   symbol: :ceil,
-        # },
       }
     end
 
@@ -98,17 +92,6 @@ module LatexEval
             end
           end
         end
-        # puts value
-        # print "bank "
-        # print bank
-        # print "\n"
-        # print "bracket "
-        # print bracket
-        # print "\n"
-        # print "unary "
-        # print unary
-        # print "\n"
-        # print "\n\n"
       end
 
       out.concat bracket.pop()

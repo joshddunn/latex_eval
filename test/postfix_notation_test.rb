@@ -47,31 +47,6 @@ class TestPostfixNotation < Minitest::Test
     assert_equal LatexEval::PostfixNotation.new(parsed).eval, -3
   end
 
-  def test_that_uniary_abs_works
-    parsed = [-2, -1, :abs, :add]
-    assert_equal LatexEval::PostfixNotation.new(parsed).eval, -1
-  end
-
-  # def test_that_uniary_floor_works
-  #   parsed = [-2, -1.123, :floor, :add]
-  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, -4
-  # end
-
-  # def test_that_uniary_ceil_works
-  #   parsed = [-2, -1.123, :ceil, :add]
-  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, -3
-  # end
-
-  # def test_that_uniary_ceil_works_after_divide
-  #   parsed = [-1, -3.123, :ceil, :divide]
-  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, 1.0/3.0
-  # end
-
-  # def test_that_uniary_floor_works_after_divide
-  #   parsed = [-1, -2.123, :floor, :divide]
-  #   assert_equal LatexEval::PostfixNotation.new(parsed).eval, 1.0/3.0
-  # end
-
   def test_that_modulus_works
     parsed = [432, 123, :mod]
     assert_equal LatexEval::PostfixNotation.new(parsed).eval, 63 

@@ -157,36 +157,6 @@ class TestParseEquation < Minitest::Test
     assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :negative, :negative]
   end
 
-  # def test_that_negative_works_with_floor
-  #   equation = "floor(2)"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :floor]
-  # end
-
-  # def test_that_negative_works_with_floor_together
-  #   equation = "floor(2) + 3"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :floor, 3, :add]
-  # end
-
-  # def test_that_negative_works_with_floor_inside
-  #   equation = "floor(2 + 3)"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 3, :add, :floor]
-  # end
-
-  # def test_that_negative_works_with_ceil
-  #   equation = "ceil(2)"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :ceil]
-  # end
-
-  # def test_that_negative_works_with_nested_uinary
-  #   equation = "floor(ceil(2))"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, :ceil, :floor]
-  # end
-
-  # def test_that_negative_works_with_multiplication
-  #   equation = "2 * floor(ceil(2))"
-  #   assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :ceil, :floor, :multiply]
-  # end
-
   def test_that_negative_works_with_multiplication_normal
     equation = "2 * - 2"
     assert_equal LatexEval::ParseEquation.new(equation).parse, [2, 2, :negative, :multiply]
