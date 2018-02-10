@@ -12,6 +12,16 @@ class TestParseLatex < Minitest::Test
     assert_equal LatexEval::ParseLatex.new(latex).parse, '((((3)/(4)))/(2))' 
   end
 
+  def test_that_latex_parser_parses_dfractions
+    latex = '\dfrac{1}{2}'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '((1)/(2))' 
+  end
+
+  def test_that_latex_parser_parses_dfractions_recursively
+    latex = '\dfrac{\dfrac{3}{4}}{2}'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '((((3)/(4)))/(2))' 
+  end
+
   def test_that_latex_parser_parses_cdot
     latex = '1\cdot2'
     assert_equal LatexEval::ParseLatex.new(latex).parse, '1*2' 
@@ -60,5 +70,20 @@ class TestParseLatex < Minitest::Test
   def test_that_latex_parser_parses_sqrt
     latex = '\sqrt{2}'
     assert_equal LatexEval::ParseLatex.new(latex).parse, '((2)^(1/2))' 
+  end
+
+  def test_works_with_typical_variables
+    latex = '\xi x'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'xi*x' 
+  end
+
+  def test_works_with_typical_variable
+    latex = '2x'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '2*x' 
+  end
+
+  def test_works_with_left_and_right
+    latex = '\left(x + 2\right)'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '(x+2)' 
   end
 end

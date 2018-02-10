@@ -9,9 +9,12 @@ module LatexEval
     def parse
       parsed = latex
 
+      parsed.gsub!(/\\left/, "")
+      parsed.gsub!(/\\right/, "")
+
       # fractions
-      while parsed.match(/\\frac{(.*)}{(.*)}/)
-        parsed.gsub!(/\\frac{(.*)}{(.*)}/, '((\1)/(\2))')
+      while parsed.match(/\\d?frac{(.*)}{(.*)}/)
+        parsed.gsub!(/\\d?frac{(.*)}{(.*)}/, '((\1)/(\2))')
       end
 
       # sqrt
@@ -34,9 +37,15 @@ module LatexEval
 
       # cleanup variable names and multiplication
       parsed.gsub!(/([0-9])\\([A-Za-z])/, '\1*\2')
+      parsed.gsub!(/([0-9])\s?([A-Za-z])/, '\1*\2')
+
       parsed.gsub!(/([A-Za-z])\\([A-Za-z])/, '\1*\2')
+      parsed.gsub!(/([A-Za-z])\s([A-Za-z])/, '\1*\2')
+
       parsed.gsub!(/([A-Za-z])([0-9])/, '\1*\2')
+
       parsed.gsub!(/(\))(\()/, '\1*\2')
+
       parsed.gsub!(/\\/, "")
 
       # cleanup spaces 
