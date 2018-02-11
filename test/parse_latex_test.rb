@@ -1,4 +1,4 @@
-require 'minitest'
+require 'minitest/autorun'
 require_relative './../lib/latex_eval.rb'
 
 class TestParseLatex < Minitest::Test
