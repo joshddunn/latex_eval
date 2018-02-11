@@ -97,6 +97,7 @@ module LatexEval
         parsed.gsub!(/(\\#{letter})/, ' \1 ')
       end
 
+      # cleans up xyz to x*y*z
       while parsed.match(/((?<!\\)\b)([0-9]?[A-Za-z])([A-Za-z])/)
         parsed.gsub!(/((?<!\\)\b)([0-9]?[A-Za-z])([A-Za-z])/, '\2*\3')
       end
