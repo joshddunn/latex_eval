@@ -70,18 +70,21 @@ module LatexEval
       parsed.gsub!(/\\right/, "")
 
       # fractions
-      while parsed.match(/\\d?frac{(.*)}{(.*)}/)
-        parsed.gsub!(/\\d?frac{(.*)}{(.*)}/, '((\1)/(\2))')
+      regex = /\\d?frac{(.*)}{(.*)}/
+      while parsed.match(regex)
+        parsed.gsub!(regex, '((\1)/(\2))')
       end
 
       # sqrt
-      while parsed.match(/\\sqrt{(.*)}/)
-        parsed.gsub!(/\\sqrt{(.*)}/, '((\1)^(1/2))')
+      regex = /\\sqrt{(.*)}/
+      while parsed.match(regex)
+        parsed.gsub!(regex, '((\1)^(1/2))')
       end
 
       # nth root
-      while parsed.match(/\\sqrt(\[?(.*)(?=\])\]?)?{(.*)}/)
-        parsed.gsub!(/\\sqrt(\[?(.*)(?=\])\]?)?{(.*)}/, '((\3)^(1/(\2)))')
+      regex = /\\sqrt(\[?(.*)(?=\])\]?)?{(.*)}/
+      while parsed.match(regex)
+        parsed.gsub!(regex, '((\3)^(1/(\2)))')
       end
 
       # \cdot and \times should be *
@@ -98,8 +101,9 @@ module LatexEval
       end
 
       # cleans up xyz to x*y*z
-      while parsed.match(/((?<!\\)\b)([0-9]?[A-Za-z])([A-Za-z])/)
-        parsed.gsub!(/((?<!\\)\b)([0-9]?[A-Za-z])([A-Za-z])/, '\2*\3')
+      regex = /((?<!\\)\b)([0-9]?[A-Za-z])([A-Za-z])/
+      while parsed.match(regex)
+        parsed.gsub!(regex, '\2*\3')
       end
 
       parsed.gsub!(/([0-9])\s+\\([A-Za-z])/, '\1*\2')
