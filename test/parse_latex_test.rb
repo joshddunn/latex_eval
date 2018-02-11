@@ -82,6 +82,16 @@ class TestParseLatex < Minitest::Test
     assert_equal LatexEval::ParseLatex.new(latex).parse, '2*x' 
   end
 
+  def test_works_with_typical_variable_spaces
+    latex = '2 x'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '2*x' 
+  end
+
+  def test_works_with_typical_variable_multiple_spaces
+    latex = '2     x'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '2*x' 
+  end
+
   def test_works_with_left_and_right
     latex = '\left(x + 2\right)'
     assert_equal LatexEval::ParseLatex.new(latex).parse, '(x+2)' 
@@ -95,5 +105,30 @@ class TestParseLatex < Minitest::Test
   def test_works_with_abs_and_variables
     latex = 'x % y'
     assert_equal LatexEval::ParseLatex.new(latex).parse, 'x%y' 
+  end
+
+  def test_works_with_variable_spaces
+    latex = 'x     y'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'x*y' 
+  end
+
+  def test_works_with_latex_variables
+    latex = '\xix'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'xi*x' 
+  end
+
+  def test_works_with_regular_variables
+    latex = 'xyz'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'x*y*z' 
+  end
+
+  def test_works_with_regular_variables_and_weird_numbers
+    latex = 'x*2yz'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, 'x*2*y*z' 
+  end
+
+  def test_works_with_regular_variables_complex
+    latex = '\frac{2xy}{3}'
+    assert_equal LatexEval::ParseLatex.new(latex).parse, '((2*x*y)/(3))' 
   end
 end
