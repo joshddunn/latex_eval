@@ -1,5 +1,5 @@
 module LatexEval
-  class ParseEquation
+  class Equation
 
     attr_reader :binary_key, :equation, :unary_key
 
@@ -47,7 +47,7 @@ module LatexEval
       }
     end
 
-    def parse
+    def postfix_notation
       out = []
       bank = []
       bracket = []

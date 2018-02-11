@@ -1,16 +1,21 @@
-require_relative "./latex_eval/parse_equation.rb"
+require_relative "./latex_eval/equation.rb"
 require_relative "./latex_eval/postfix_notation.rb"
-require_relative "./latex_eval/parse_latex.rb"
+require_relative "./latex_eval/latex.rb"
 
 module LatexEval
   class << self
 
-    def parse_latex(latex, subs = {})
-      parsed_latex = LatexEval::ParseLatex.new(latex).parse
-      parsed_notation = LatexEval::ParseEquation.new(parsed_latex).parse
+    def eval(latex, subs = {})
+      parsed_latex = LatexEval::Latex.new(latex).equation
+      parsed_notation = LatexEval::Equation.new(parsed_latex).postfix_notation
       eval_latex = LatexEval::PostfixNotation.new(parsed_notation)
 
       return eval_latex.eval(subs)
+    end
+
+    def postfix_notation(latex)
+      equation = LatexEval::Latex.new(latex).equation
+      return LatexEval::Equation.new(equation).postfix_notation
     end
   end
 end

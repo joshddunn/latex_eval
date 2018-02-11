@@ -1,5 +1,5 @@
 module LatexEval
-  class ParseLatex
+  class Latex
     attr_reader :latex, :greek_letters
 
     def initialize(latex)
@@ -63,7 +63,7 @@ module LatexEval
       ]
     end
 
-    def parse
+    def equation
       parsed = latex
 
       parsed.gsub!(/\\left/, "")
