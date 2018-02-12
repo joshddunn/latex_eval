@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    latex-eval (0.1.0)
+    latex_eval (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -13,7 +13,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  latex-eval!
+  latex_eval!
   minitest (~> 5.11, >= 5.11.3)
   rake (~> 12.3)
 
