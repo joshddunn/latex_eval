@@ -1,4 +1,4 @@
-# latex-eval
+# latex\_eval
 
 This gem can be used to safely evaluate simple latex expressions.
 
