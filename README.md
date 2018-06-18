@@ -46,7 +46,7 @@ The equation class is used to convert your equations into postfix notation. For 
 
 will output `[3, :xi, 2, :divide, :add]`.
 
-Currently, the `postfix_notation` method for the `Equation` class can interpret
+Currently, the `postfix_notation` method for the `Equation` class can interpret:
 
 - brackets
 - binary operators
@@ -72,7 +72,7 @@ will output `4.5`.
 
 The `eval` method accepts one argument, which is a hash of variable values.
 
-Currently, the `eval` method for the `PostfixNotation` class can interpret
+Currently, the `eval` method for the `PostfixNotation` class can interpret:
 
 - binary operators
   - :multiply
